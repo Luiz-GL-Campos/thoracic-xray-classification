@@ -1,0 +1,28 @@
+# Dataset e imagens (bloqueia qualquer pasta de dados e formatos de imagem)
+data/
+*.png
+*.jpg
+*.jpeg
+*.zip
+*.tar.gz
+
+# Pesos e Checkpoints dos Modelos Treinados (PyTorch/TensorFlow)
+*.pt
+*.pth
+*.bin
+*.onnx
+*.h5
+runs/
+checkpoints/
+
+# Ambientes virtuais e cache do Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.env
+
+# Arquivos de IDEs
+.vscode/
+.idea/
