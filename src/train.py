@@ -97,6 +97,16 @@ def main():
     epochs = 10
     best_val_auroc = 0.0
     os.makedirs("checkpoints", exist_ok=True)
+
+    # Verifica se já existe um modelo salvo para continuar o treino
+    checkpoint_path = "checkpoints/best_resnet50.pth"
+    if os.path.exists(checkpoint_path):
+        print("Checkpoint encontrado! Carregando pesos salvos para retomar o treino...")
+        model.load_state_dict(torch.load(checkpoint_path, map_location=DEVICE))
+        
+        # Avalia a AUROC do modelo carregado para atualizar best_val_auroc
+        _, best_val_auroc, _ = avaliar(model, val_loader, criterion, DEVICE)
+        print(f" -> Modelo carregado com Val Mean AUROC inicial de: {best_val_auroc:.4f}")
     
     for epoch in range(1, epochs + 1):
         train_loss = treinar_uma_epoca(model, train_loader, criterion, optimizer, DEVICE)
