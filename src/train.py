@@ -1,6 +1,7 @@
 import os
 import torch
 import torch.nn as nn
+import json
 from torch.utils.data import DataLoader
 import pandas as pd
 import numpy as np
@@ -129,6 +130,19 @@ def main():
     print("AUROC por Patologia:")
     for label, score in class_auroc.items():
         print(f"  - {label}: {score:.4f}")
+
+    # Salva os resultados em um arquivo JSON
+    os.makedirs("results", exist_ok=True)
+    resultados = {
+        "test_loss": float(test_loss),
+        "test_mean_auroc": float(test_auroc),
+        "auroc_per_class": {k: float(v) for k, v in class_auroc.items()}
+    }
+
+    with open("results/metrics.json", "w") as f:
+        json.dump(resultados, f, indent=4)
+
+    print("Resultados salvos em results/metrics.json")
 
 if __name__ == "__main__":
     main()
