@@ -1,0 +1,86 @@
+{
+    "Atelectasis": {
+        "True_Negatives_VN": 19852,
+        "False_Positives_FP": 235,
+        "False_Negatives_FN": 1908,
+        "True_Positives_VP": 299
+    },
+    "Cardiomegaly": {
+        "True_Negatives_VN": 21556,
+        "False_Positives_FP": 120,
+        "False_Negatives_FN": 491,
+        "True_Positives_VP": 127
+    },
+    "Effusion": {
+        "True_Negatives_VN": 19154,
+        "False_Positives_FP": 587,
+        "False_Negatives_FN": 1669,
+        "True_Positives_VP": 884
+    },
+    "Infiltration": {
+        "True_Negatives_VN": 17945,
+        "False_Positives_FP": 252,
+        "False_Negatives_FN": 3892,
+        "True_Positives_VP": 205
+    },
+    "Mass": {
+        "True_Negatives_VN": 20981,
+        "False_Positives_FP": 237,
+        "False_Negatives_FN": 871,
+        "True_Positives_VP": 205
+    },
+    "Nodule": {
+        "True_Negatives_VN": 20947,
+        "False_Positives_FP": 67,
+        "False_Negatives_FN": 1222,
+        "True_Positives_VP": 58
+    },
+    "Pneumonia": {
+        "True_Negatives_VN": 22000,
+        "False_Positives_FP": 0,
+        "False_Negatives_FN": 294,
+        "True_Positives_VP": 0
+    },
+    "Pneumothorax": {
+        "True_Negatives_VN": 21067,
+        "False_Positives_FP": 207,
+        "False_Negatives_FN": 810,
+        "True_Positives_VP": 210
+    },
+    "Consolidation": {
+        "True_Negatives_VN": 21343,
+        "False_Positives_FP": 0,
+        "False_Negatives_FN": 951,
+        "True_Positives_VP": 0
+    },
+    "Edema": {
+        "True_Negatives_VN": 21771,
+        "False_Positives_FP": 69,
+        "False_Negatives_FN": 428,
+        "True_Positives_VP": 26
+    },
+    "Emphysema": {
+        "True_Negatives_VN": 21636,
+        "False_Positives_FP": 127,
+        "False_Negatives_FN": 388,
+        "True_Positives_VP": 143
+    },
+    "Fibrosis": {
+        "True_Negatives_VN": 21919,
+        "False_Positives_FP": 11,
+        "False_Negatives_FN": 358,
+        "True_Positives_VP": 6
+    },
+    "Pleural_Thickening": {
+        "True_Negatives_VN": 21590,
+        "False_Positives_FP": 44,
+        "False_Negatives_FN": 639,
+        "True_Positives_VP": 21
+    },
+    "Hernia": {
+        "True_Negatives_VN": 22245,
+        "False_Positives_FP": 1,
+        "False_Negatives_FN": 43,
+        "True_Positives_VP": 5
+    }
+}
