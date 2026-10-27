@@ -12,6 +12,10 @@ from src.config import DEVICE, IMAGES_DIR, LABELS, NUM_CLASSES
 from src.dataset import NIHChestXrayDataset, get_transforms
 from src.models.resnet import get_resnet50_model
 
+# 🚀 OTIMIZAÇÃO GPU: Ativa o sintonizador automático de convoluções do cuDNN
+if torch.cuda.is_available():
+    torch.backends.cudnn.benchmark = True
+
 def calcular_auroc(y_true, y_pred, labels):
     """Calcula a AUROC para cada uma das 14 doenças e retorna a média."""
     auroc_por_classe = {}
@@ -25,18 +29,23 @@ def calcular_auroc(y_true, y_pred, labels):
     mean_auroc = np.nanmean(list(auroc_por_classe.values()))
     return mean_auroc, auroc_por_classe
 
-def treinar_uma_epoca(model, dataloader, criterion, optimizer, device):
+def treinar_uma_epoca(model, dataloader, criterion, optimizer, scaler, device):
     model.train()
     total_loss = 0.0
     
     for images, targets in dataloader:
-        images, targets = images.to(device), targets.to(device)
+        images, targets = images.to(device, non_blocking=True), targets.to(device, non_blocking=True)
         
-        optimizer.zero_grad()
-        outputs = model(images)
-        loss = criterion(outputs, targets)
-        loss.backward()
-        optimizer.step()
+        optimizer.zero_grad(set_to_none=True) # 🚀 OTIMIZAÇÃO: Zera gradientes de forma mais rápida
+        
+        # 🚀 OTIMIZAÇÃO: Precision Mista (FP16/AMP) nos Tensor Cores
+        with torch.amp.autocast('cuda'):
+            outputs = model(images)
+            loss = criterion(outputs, targets)
+            
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
         
         total_loss += loss.item() * images.size(0)
         
@@ -50,9 +59,12 @@ def avaliar(model, dataloader, criterion, device):
     all_preds = []
     
     for images, targets in dataloader:
-        images, targets = images.to(device), targets.to(device)
-        outputs = model(images)
-        loss = criterion(outputs, targets)
+        images, targets = images.to(device, non_blocking=True), targets.to(device, non_blocking=True)
+        
+        # 🚀 OTIMIZAÇÃO: Inferência acelerada em FP16
+        with torch.amp.autocast('cuda'):
+            outputs = model(images)
+            loss = criterion(outputs, targets)
         
         total_loss += loss.item() * images.size(0)
         
@@ -77,23 +89,46 @@ def main():
     val_df = pd.read_csv("data/processed/val.csv")
     test_df = pd.read_csv("data/processed/test.csv")
     
-    # 2. Prepara os DataLoaders
+    # 2. Prepara os DataLoaders Otimizados para RTX 4070 + i7-13700
     train_tf, val_tf = get_transforms()
     
     train_dataset = NIHChestXrayDataset(train_df, IMAGES_DIR, transform=train_tf, labels=LABELS)
     val_dataset = NIHChestXrayDataset(val_df, IMAGES_DIR, transform=val_tf, labels=LABELS)
     test_dataset = NIHChestXrayDataset(test_df, IMAGES_DIR, transform=val_tf, labels=LABELS)
     
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=4)
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=4)
+    # 🚀 OTIMIZAÇÃO DE CARREGAMENTO: Batch Size maior, Pin Memory e Persistent Workers
+    train_loader = DataLoader(
+        train_dataset, 
+        batch_size=64, 
+        shuffle=True, 
+        num_workers=8, 
+        pin_memory=True, 
+        persistent_workers=True
+    )
+    val_loader = DataLoader(
+        val_dataset, 
+        batch_size=128, 
+        shuffle=False, 
+        num_workers=8, 
+        pin_memory=True, 
+        persistent_workers=True
+    )
+    test_loader = DataLoader(
+        test_dataset, 
+        batch_size=128, 
+        shuffle=False, 
+        num_workers=8, 
+        pin_memory=True, 
+        persistent_workers=True
+    )
     
-    # 3. Instancia Modelo limpo (do zero com ImageNet), Loss e Otimizador
-    print("Iniciando modelo limpo a partir de pesos pré-treinados do ImageNet...")
+    # 3. Instancia Modelo, Loss, Otimizador e Scaler de Gradiente
+    print("Iniciando modelo limpo com otimizações de aceleração de hardware...")
     model = get_resnet50_model(num_classes=NUM_CLASSES, pretrained=True).to(DEVICE)
     criterion = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
-    
+    scaler = torch.amp.GradScaler('cuda') # Escalador de gradientes para AMP
+
     # 4. Loop de Treinamento
     epochs = 10
     best_val_auroc = 0.0
@@ -106,14 +141,13 @@ def main():
     for epoch in range(1, epochs + 1):
         epoch_start = time.time()
         
-        train_loss = treinar_uma_epoca(model, train_loader, criterion, optimizer, DEVICE)
+        train_loss = treinar_uma_epoca(model, train_loader, criterion, optimizer, scaler, DEVICE)
         val_loss, val_auroc, _ = avaliar(model, val_loader, criterion, DEVICE)
         
         epoch_duration = time.time() - epoch_start
         
         print(f"Época [{epoch}/{epochs}] | Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f} | Val Mean AUROC: {val_auroc:.4f} | Tempo: {epoch_duration:.1f}s")
         
-        # Guarda o registro completo da época
         dados_epoca = {
             "epoch": epoch,
             "train_loss": round(float(train_loss), 4),
@@ -123,13 +157,11 @@ def main():
         }
         historico_epocas.append(dados_epoca)
         
-        # Salva o checkpoint apenas se for o MELHOR até o momento
         if val_auroc > best_val_auroc:
             best_val_auroc = val_auroc
             torch.save(model.state_dict(), "checkpoints/best_resnet50.pth")
             print(" -> Melhor modelo salvo!")
 
-        # Atualiza os arquivos de histórico no disco a cada época
         df_hist = pd.DataFrame(historico_epocas)
         df_hist.to_csv("results/history.csv", index=False)
         with open("results/history.json", "w") as f:
@@ -140,7 +172,7 @@ def main():
     train_time_str = f"{int(train_min)}m {train_sec:.2f}s"
     print(f"\n⏱️  Tempo total de Treinamento: {train_time_str}")
 
-    # 5. Avaliação Final no Conjunto de Teste com o Melhor Modelo
+    # 5. Avaliação Final no Conjunto de Teste
     print("\n--- AVALIAÇÃO FINAL NO TESTE (Melhor Checkpoint) ---")
     model.load_state_dict(torch.load("checkpoints/best_resnet50.pth", map_location=DEVICE))
 
@@ -153,7 +185,6 @@ def main():
     print(f"Test Loss: {test_loss:.4f} | Test Mean AUROC: {test_auroc:.4f}")
     print(f"⏱️  Tempo total de Teste (Inferência): {test_time_str}\n")
 
-    # Salva o relatório consolidado final
     resultados = {
         "execution_time": {
             "train_time_seconds": round(train_duration, 2),
@@ -171,7 +202,7 @@ def main():
     with open("results/metrics.json", "w") as f:
         json.dump(resultados, f, indent=4)
 
-    print("✅ Histórico de todas as épocas salvo em: results/history.csv e results/history.json")
+    print("✅ Histórico salvo em: results/history.csv e results/history.json")
     print("✅ Métricas do teste final salvas em: results/metrics.json")
 
 if __name__ == "__main__":

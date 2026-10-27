@@ -18,7 +18,13 @@ def obter_predicoes_e_rotulos():
     test_df = pd.read_csv("data/processed/test.csv")
     _, val_tf = get_transforms()
     test_dataset = NIHChestXrayDataset(test_df, IMAGES_DIR, transform=val_tf, labels=LABELS)
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=4)
+    test_loader = DataLoader(
+        test_dataset, 
+        batch_size=128,
+        shuffle=False, 
+        num_workers=8,
+        pin_memory=True
+    )
     
     model = get_resnet50_model(num_classes=NUM_CLASSES, pretrained=False).to(DEVICE)
     model.load_state_dict(torch.load("checkpoints/best_resnet50.pth", map_location=DEVICE))
