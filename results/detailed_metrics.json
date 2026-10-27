@@ -1,61 +1,61 @@
 [
     {
         "Patologia": "Atelectasis",
-        "AUROC": 0.8153,
-        "Acuracia": 0.9039,
-        "Sensibilidade": 0.1355,
-        "Especificidade": 0.9883,
-        "Precisao": 0.5599,
-        "F1_Score": 0.2182
+        "AUROC": 0.8044,
+        "Acuracia": 0.9001,
+        "Sensibilidade": 0.1609,
+        "Especificidade": 0.9813,
+        "Precisao": 0.4863,
+        "F1_Score": 0.2417
     },
     {
         "Patologia": "Cardiomegaly",
-        "AUROC": 0.9088,
-        "Acuracia": 0.9726,
-        "Sensibilidade": 0.2055,
-        "Especificidade": 0.9945,
-        "Precisao": 0.5142,
-        "F1_Score": 0.2936
+        "AUROC": 0.9052,
+        "Acuracia": 0.9724,
+        "Sensibilidade": 0.0663,
+        "Especificidade": 0.9982,
+        "Precisao": 0.5125,
+        "F1_Score": 0.1175
     },
     {
         "Patologia": "Effusion",
-        "AUROC": 0.876,
-        "Acuracia": 0.8988,
-        "Sensibilidade": 0.3463,
-        "Especificidade": 0.9703,
-        "Precisao": 0.601,
-        "F1_Score": 0.4394
+        "AUROC": 0.875,
+        "Acuracia": 0.8976,
+        "Sensibilidade": 0.3322,
+        "Especificidade": 0.9707,
+        "Precisao": 0.5943,
+        "F1_Score": 0.4261
     },
     {
         "Patologia": "Infiltration",
-        "AUROC": 0.7034,
-        "Acuracia": 0.8141,
-        "Sensibilidade": 0.05,
-        "Especificidade": 0.9862,
-        "Precisao": 0.4486,
-        "F1_Score": 0.09
+        "AUROC": 0.7023,
+        "Acuracia": 0.81,
+        "Sensibilidade": 0.1875,
+        "Especificidade": 0.9502,
+        "Precisao": 0.4585,
+        "F1_Score": 0.2661
     },
     {
         "Patologia": "Mass",
-        "AUROC": 0.839,
-        "Acuracia": 0.9503,
-        "Sensibilidade": 0.1905,
-        "Especificidade": 0.9888,
-        "Precisao": 0.4638,
-        "F1_Score": 0.2701
+        "AUROC": 0.8293,
+        "Acuracia": 0.9509,
+        "Sensibilidade": 0.2165,
+        "Especificidade": 0.9881,
+        "Precisao": 0.4804,
+        "F1_Score": 0.2985
     },
     {
         "Patologia": "Nodule",
-        "AUROC": 0.7623,
-        "Acuracia": 0.9422,
-        "Sensibilidade": 0.0453,
-        "Especificidade": 0.9968,
-        "Precisao": 0.464,
-        "F1_Score": 0.0826
+        "AUROC": 0.7493,
+        "Acuracia": 0.9412,
+        "Sensibilidade": 0.1078,
+        "Especificidade": 0.992,
+        "Precisao": 0.451,
+        "F1_Score": 0.174
     },
     {
         "Patologia": "Pneumonia",
-        "AUROC": 0.76,
+        "AUROC": 0.7359,
         "Acuracia": 0.9868,
         "Sensibilidade": 0.0,
         "Especificidade": 1.0,
@@ -64,65 +64,65 @@
     },
     {
         "Patologia": "Pneumothorax",
-        "AUROC": 0.8773,
-        "Acuracia": 0.9544,
-        "Sensibilidade": 0.2059,
-        "Especificidade": 0.9903,
-        "Precisao": 0.5036,
-        "F1_Score": 0.2923
+        "AUROC": 0.8758,
+        "Acuracia": 0.9518,
+        "Sensibilidade": 0.198,
+        "Especificidade": 0.988,
+        "Precisao": 0.441,
+        "F1_Score": 0.2733
     },
     {
         "Patologia": "Consolidation",
-        "AUROC": 0.811,
+        "AUROC": 0.7926,
         "Acuracia": 0.9573,
-        "Sensibilidade": 0.0,
-        "Especificidade": 1.0,
-        "Precisao": 0.0,
-        "F1_Score": 0.0
+        "Sensibilidade": 0.0011,
+        "Especificidade": 0.9999,
+        "Precisao": 0.3333,
+        "F1_Score": 0.0021
     },
     {
         "Patologia": "Edema",
-        "AUROC": 0.8901,
-        "Acuracia": 0.9777,
-        "Sensibilidade": 0.0573,
-        "Especificidade": 0.9968,
-        "Precisao": 0.2737,
-        "F1_Score": 0.0947
+        "AUROC": 0.8878,
+        "Acuracia": 0.9774,
+        "Sensibilidade": 0.0286,
+        "Especificidade": 0.9972,
+        "Precisao": 0.1733,
+        "F1_Score": 0.0491
     },
     {
         "Patologia": "Emphysema",
-        "AUROC": 0.9162,
-        "Acuracia": 0.9769,
-        "Sensibilidade": 0.2693,
-        "Especificidade": 0.9942,
-        "Precisao": 0.5296,
-        "F1_Score": 0.3571
+        "AUROC": 0.9178,
+        "Acuracia": 0.9765,
+        "Sensibilidade": 0.2166,
+        "Especificidade": 0.995,
+        "Precisao": 0.5134,
+        "F1_Score": 0.3046
     },
     {
         "Patologia": "Fibrosis",
-        "AUROC": 0.8082,
+        "AUROC": 0.7984,
         "Acuracia": 0.9834,
-        "Sensibilidade": 0.0165,
-        "Especificidade": 0.9995,
-        "Precisao": 0.3529,
-        "F1_Score": 0.0315
+        "Sensibilidade": 0.0082,
+        "Especificidade": 0.9996,
+        "Precisao": 0.25,
+        "F1_Score": 0.016
     },
     {
         "Patologia": "Pleural_Thickening",
-        "AUROC": 0.803,
-        "Acuracia": 0.9694,
-        "Sensibilidade": 0.0318,
-        "Especificidade": 0.998,
-        "Precisao": 0.3231,
-        "F1_Score": 0.0579
+        "AUROC": 0.7951,
+        "Acuracia": 0.97,
+        "Sensibilidade": 0.0076,
+        "Especificidade": 0.9994,
+        "Precisao": 0.2778,
+        "F1_Score": 0.0147
     },
     {
         "Patologia": "Hernia",
-        "AUROC": 0.9267,
-        "Acuracia": 0.998,
-        "Sensibilidade": 0.1042,
+        "AUROC": 0.9212,
+        "Acuracia": 0.9979,
+        "Sensibilidade": 0.0208,
         "Especificidade": 1.0,
-        "Precisao": 0.8333,
-        "F1_Score": 0.1852
+        "Precisao": 1.0,
+        "F1_Score": 0.0408
     }
 ]

@@ -1,0 +1,99 @@
+{
+    "execution_time": {
+        "train_time_seconds": 12210.66,
+        "train_time_formatted": "203m 30.66s",
+        "test_time_seconds": 260.01,
+        "test_time_formatted": "4m 20.01s"
+    },
+    "best_val_mean_auroc": 0.8307084054217898,
+    "test_loss": 0.15182037976511692,
+    "test_mean_auroc": 0.827828288705886,
+    "auroc_per_class": {
+        "Atelectasis": 0.8044013638091609,
+        "Cardiomegaly": 0.904995928564902,
+        "Effusion": 0.8749823929245263,
+        "Infiltration": 0.7022964126150661,
+        "Mass": 0.829249079567359,
+        "Nodule": 0.7492636047694394,
+        "Pneumonia": 0.7359025974025974,
+        "Pneumothorax": 0.8758287525784029,
+        "Consolidation": 0.7926927137166208,
+        "Edema": 0.8879222237014088,
+        "Emphysema": 0.917684674129877,
+        "Fibrosis": 0.7982378371742256,
+        "Pleural_Thickening": 0.7950641666736702,
+        "Hernia": 0.921074294255147
+    },
+    "epochs_history": [
+        {
+            "epoch": 1,
+            "train_loss": 0.1722,
+            "val_loss": 0.1535,
+            "val_mean_auroc": 0.7964,
+            "epoch_time_seconds": 1241.8
+        },
+        {
+            "epoch": 2,
+            "train_loss": 0.1497,
+            "val_loss": 0.1496,
+            "val_mean_auroc": 0.8165,
+            "epoch_time_seconds": 1188.56
+        },
+        {
+            "epoch": 3,
+            "train_loss": 0.1444,
+            "val_loss": 0.1468,
+            "val_mean_auroc": 0.8226,
+            "epoch_time_seconds": 1190.27
+        },
+        {
+            "epoch": 4,
+            "train_loss": 0.1406,
+            "val_loss": 0.1472,
+            "val_mean_auroc": 0.8247,
+            "epoch_time_seconds": 1290.66
+        },
+        {
+            "epoch": 5,
+            "train_loss": 0.1366,
+            "val_loss": 0.1489,
+            "val_mean_auroc": 0.8259,
+            "epoch_time_seconds": 1238.95
+        },
+        {
+            "epoch": 6,
+            "train_loss": 0.1322,
+            "val_loss": 0.1483,
+            "val_mean_auroc": 0.8307,
+            "epoch_time_seconds": 1190.08
+        },
+        {
+            "epoch": 7,
+            "train_loss": 0.1274,
+            "val_loss": 0.1506,
+            "val_mean_auroc": 0.8204,
+            "epoch_time_seconds": 1215.27
+        },
+        {
+            "epoch": 8,
+            "train_loss": 0.1219,
+            "val_loss": 0.154,
+            "val_mean_auroc": 0.8154,
+            "epoch_time_seconds": 1237.79
+        },
+        {
+            "epoch": 9,
+            "train_loss": 0.1154,
+            "val_loss": 0.163,
+            "val_mean_auroc": 0.8053,
+            "epoch_time_seconds": 1214.87
+        },
+        {
+            "epoch": 10,
+            "train_loss": 0.1085,
+            "val_loss": 0.1656,
+            "val_mean_auroc": 0.8077,
+            "epoch_time_seconds": 1201.31
+        }
+    ]
+}

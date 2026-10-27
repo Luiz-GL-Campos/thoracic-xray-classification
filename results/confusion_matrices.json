@@ -1,39 +1,39 @@
 {
     "Atelectasis": {
-        "True_Negatives_VN": 19852,
-        "False_Positives_FP": 235,
-        "False_Negatives_FN": 1908,
-        "True_Positives_VP": 299
+        "True_Negatives_VN": 19712,
+        "False_Positives_FP": 375,
+        "False_Negatives_FN": 1852,
+        "True_Positives_VP": 355
     },
     "Cardiomegaly": {
-        "True_Negatives_VN": 21556,
-        "False_Positives_FP": 120,
-        "False_Negatives_FN": 491,
-        "True_Positives_VP": 127
+        "True_Negatives_VN": 21637,
+        "False_Positives_FP": 39,
+        "False_Negatives_FN": 577,
+        "True_Positives_VP": 41
     },
     "Effusion": {
-        "True_Negatives_VN": 19154,
-        "False_Positives_FP": 587,
-        "False_Negatives_FN": 1669,
-        "True_Positives_VP": 884
+        "True_Negatives_VN": 19162,
+        "False_Positives_FP": 579,
+        "False_Negatives_FN": 1705,
+        "True_Positives_VP": 848
     },
     "Infiltration": {
-        "True_Negatives_VN": 17945,
-        "False_Positives_FP": 252,
-        "False_Negatives_FN": 3892,
-        "True_Positives_VP": 205
+        "True_Negatives_VN": 17290,
+        "False_Positives_FP": 907,
+        "False_Negatives_FN": 3329,
+        "True_Positives_VP": 768
     },
     "Mass": {
-        "True_Negatives_VN": 20981,
-        "False_Positives_FP": 237,
-        "False_Negatives_FN": 871,
-        "True_Positives_VP": 205
+        "True_Negatives_VN": 20966,
+        "False_Positives_FP": 252,
+        "False_Negatives_FN": 843,
+        "True_Positives_VP": 233
     },
     "Nodule": {
-        "True_Negatives_VN": 20947,
-        "False_Positives_FP": 67,
-        "False_Negatives_FN": 1222,
-        "True_Positives_VP": 58
+        "True_Negatives_VN": 20846,
+        "False_Positives_FP": 168,
+        "False_Negatives_FN": 1142,
+        "True_Positives_VP": 138
     },
     "Pneumonia": {
         "True_Negatives_VN": 22000,
@@ -42,45 +42,45 @@
         "True_Positives_VP": 0
     },
     "Pneumothorax": {
-        "True_Negatives_VN": 21067,
-        "False_Positives_FP": 207,
-        "False_Negatives_FN": 810,
-        "True_Positives_VP": 210
+        "True_Negatives_VN": 21018,
+        "False_Positives_FP": 256,
+        "False_Negatives_FN": 818,
+        "True_Positives_VP": 202
     },
     "Consolidation": {
-        "True_Negatives_VN": 21343,
-        "False_Positives_FP": 0,
-        "False_Negatives_FN": 951,
-        "True_Positives_VP": 0
+        "True_Negatives_VN": 21341,
+        "False_Positives_FP": 2,
+        "False_Negatives_FN": 950,
+        "True_Positives_VP": 1
     },
     "Edema": {
-        "True_Negatives_VN": 21771,
-        "False_Positives_FP": 69,
-        "False_Negatives_FN": 428,
-        "True_Positives_VP": 26
+        "True_Negatives_VN": 21778,
+        "False_Positives_FP": 62,
+        "False_Negatives_FN": 441,
+        "True_Positives_VP": 13
     },
     "Emphysema": {
-        "True_Negatives_VN": 21636,
-        "False_Positives_FP": 127,
-        "False_Negatives_FN": 388,
-        "True_Positives_VP": 143
+        "True_Negatives_VN": 21654,
+        "False_Positives_FP": 109,
+        "False_Negatives_FN": 416,
+        "True_Positives_VP": 115
     },
     "Fibrosis": {
-        "True_Negatives_VN": 21919,
-        "False_Positives_FP": 11,
-        "False_Negatives_FN": 358,
-        "True_Positives_VP": 6
+        "True_Negatives_VN": 21921,
+        "False_Positives_FP": 9,
+        "False_Negatives_FN": 361,
+        "True_Positives_VP": 3
     },
     "Pleural_Thickening": {
-        "True_Negatives_VN": 21590,
-        "False_Positives_FP": 44,
-        "False_Negatives_FN": 639,
-        "True_Positives_VP": 21
+        "True_Negatives_VN": 21621,
+        "False_Positives_FP": 13,
+        "False_Negatives_FN": 655,
+        "True_Positives_VP": 5
     },
     "Hernia": {
-        "True_Negatives_VN": 22245,
-        "False_Positives_FP": 1,
-        "False_Negatives_FN": 43,
-        "True_Positives_VP": 5
+        "True_Negatives_VN": 22246,
+        "False_Positives_FP": 0,
+        "False_Negatives_FN": 47,
+        "True_Positives_VP": 1
     }
 }
