@@ -1,8 +1,8 @@
 import os
-import cv2
 import torch
+import torch.nn.functional as F
 import numpy as np
-import pandas as pd
+import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
 
@@ -11,144 +11,133 @@ from src.dataset import get_transforms
 from src.models.resnet import get_resnet50_model
 
 class GradCAM:
-    """
-    Classe para extração de mapas de ativação por gradiente (Grad-CAM)
-    na última camada convolucional da ResNet-50.
-    """
+    """Implementacao de Grad-CAM para interpretabilidade de redes convolucionais."""
     def __init__(self, model, target_layer):
         self.model = model
         self.target_layer = target_layer
         self.gradients = None
         self.activations = None
         
-        # Registra hooks de leitura de ativações e gradientes
-        self.target_layer.register_forward_hook(self.save_activation)
-        self.target_layer.register_full_backward_hook(self.save_gradient)
+        # Hooks para capturar ativacoes e gradientes
+        self.target_layer.register_forward_hook(self._save_activations)
+        self.target_layer.register_full_backward_hook(self._save_gradients)
 
-    def save_activation(self, module, input, output):
+    def _save_activations(self, module, input, output):
         self.activations = output
 
-    def save_gradient(self, module, grad_input, grad_output):
+    def _save_gradients(self, module, grad_input, grad_output):
         self.gradients = grad_output[0]
 
-    def generate_heatmap(self, input_tensor, class_idx):
-        self.model.eval()
+    def generate_heatmap(self, input_tensor, target_class_idx):
         self.model.zero_grad()
-        
-        # Realiza a passagem direta
         output = self.model(input_tensor)
         
-        # Seleciona a saída do neurônio correspondente à patologia alvo
-        target_score = output[0, class_idx]
-        target_score.backward()
-
-        # Extrai gradientes e ativações em formato Numpy
-        gradients = self.gradients[0].cpu().data.numpy()   # (C, H, W)
-        activations = self.activations[0].cpu().data.numpy() # (C, H, W)
+        # Seleciona a pontuacao especifica da classe alvo
+        score = output[0, target_class_idx]
+        score.backward(retain_graph=True)
         
-        # Média global dos gradientes por canal (pesos da importância dos mapas)
+        # Processamento dos gradientes e ativacoes
+        gradients = self.gradients[0].cpu().data.numpy()
+        activations = self.activations[0].cpu().data.numpy()
+        
+        # Pesos baseados na media dos gradientes (Global Average Pooling)
         weights = np.mean(gradients, axis=(1, 2))
         
-        # Combinação ponderada dos mapas de ativação
+        # Combinacao ponderada dos mapas de ativacao
         cam = np.zeros(activations.shape[1:], dtype=np.float32)
         for i, w in enumerate(weights):
-            cam += w * activations[i]
-
-        # Aplica ativação ReLU para manter apenas contribuições positivas
+            cam += w * activations[i, :, :]
+            
+        # Aplicacao de ReLU para manter apenas influencias positivas
         cam = np.maximum(cam, 0)
         
-        # Normalização entre 0 e 1
+        # Normalizacao entre 0 e 1
         if cam.max() != 0:
             cam = cam / cam.max()
             
-        probabilidade = torch.sigmoid(output)[0, class_idx].item()
-        return cam, probabilidade
+        return cam, torch.sigmoid(output[0, target_class_idx]).item()
 
-
-def gerar_overlay_gradcam(original_pil_img, cam, alpha=0.5):
-    """Mapeia o Grad-CAM para o tamanho original e sobrepõe como mapa de calor."""
-    w, h = original_pil_img.size
-    cam_resized = cv2.resize(cam, (w, h))
+def sobrepor_heatmap(imagem_np, heatmap, alpha=0.4):
+    """Redimensiona o heatmap e faz a sobreposicao na imagem original."""
+    heatmap_resized = cv2.resize(heatmap, (imagem_np.shape[1], imagem_np.shape[0]))
+    heatmap_uint8 = np.uint8(255 * heatmap_resized)
+    heatmap_color = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
+    heatmap_color = cv2.cvtColor(heatmap_color, cv2.COLOR_BGR2RGB)
     
-    # Aplica o mapa de cores JET (Azul = Baixo, Vermelho = Alto)
-    heatmap = np.uint8(255 * cam_resized)
-    heatmap_colored = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
-    heatmap_colored = cv2.cvtColor(heatmap_colored, cv2.COLOR_BGR2RGB)
-    
-    # Prepara a imagem original em RGB
-    img_np = np.array(original_pil_img.convert("RGB"))
-    
-    # Fusão ponderada da imagem com o mapa de calor
-    overlay = np.uint8((1 - alpha) * img_np + alpha * heatmap_colored)
+    # Mistura da imagem original em tons de cinza com o heatmap colorido
+    overlay = np.float32(heatmap_color) * alpha + np.float32(imagem_np) * (1 - alpha)
+    overlay = np.clip(overlay, 0, 255).astype(np.uint8)
     return overlay
 
-
-def main():
-    os.makedirs("results", exist_ok=True)
+def gerar_gradcam_todas_patologias(model, image_path, labels, output_path):
+    """Gera um painel comparativo contendo o Grad-CAM para cada uma das 14 patologias."""
+    _, val_tf = get_transforms()
     
-    # 1. Carrega modelo e pesos do checkpoint
-    print("Carregando o modelo ResNet-50...")
-    model = get_resnet50_model(num_classes=NUM_CLASSES, pretrained=False).to(DEVICE)
-    model.load_state_dict(torch.load("checkpoints/best_resnet50.pth", map_location=DEVICE))
+    # Carregamento e pre-processamento da imagem
+    pil_image = Image.open(image_path).convert("RGB")
+    imagem_np = np.array(pil_image)
     
-    # A última camada convolucional da ResNet-50 é model.layer4[-1]
+    input_tensor = val_tf(pil_image).unsqueeze(0).to(DEVICE)
+    
+    # Instancia o Grad-CAM na ultima camada convolucional da ResNet-50
     target_layer = model.layer4[-1]
     grad_cam = GradCAM(model, target_layer)
     
-    # 2. Carrega o conjunto de teste e transformações
-    test_df = pd.read_csv("data/processed/test.csv")
-    _, val_tf = get_transforms()
+    # Criacao da figura com matriz 3x5 (1 original + 14 patologias)
+    fig, axes = plt.subplots(3, 5, figsize=(20, 12))
+    axes = axes.ravel()
     
-    # Seleciona até 4 exemplos marcantes de patologias para demonstrar
-    patologias_alvo = ["Cardiomegaly", "Effusion", "Pneumothorax", "Edema"]
-    amostras_selecionadas = []
+    # Subplot 0: Imagem Original
+    axes[0].imshow(imagem_np)
+    axes[0].set_title("Imagem Original", fontsize=10, fontweight="bold")
+    axes[0].axis("off")
     
-    for patologia in patologias_alvo:
-        df_patologia = test_df[test_df[patologia] == 1]
-        if not df_patologia.empty:
-            amostras_selecionadas.append((patologia, df_patologia.iloc[0]))
-
-    if not amostras_selecionadas:
-        print("Nenhuma amostra específica encontrada. Selecionando as primeiras imagens do teste...")
-        for i in range(min(4, len(test_df))):
-            amostras_selecionadas.append((LABELS[0], test_df.iloc[i]))
-
-    # 3. Processa e gera o painel comparativo
-    fig, axes = plt.subplots(len(amostras_selecionadas), 2, figsize=(10, 4 * len(amostras_selecionadas)))
-    if len(amostras_selecionadas) == 1:
-        axes = np.expand_dims(axes, axis=0)
-
-    print("Gerando mapas de calor Grad-CAM...")
-    for idx, (patologia, row) in enumerate(amostras_selecionadas):
-        img_name = row['Image Index']
-        img_path = os.path.join(IMAGES_DIR, img_name)
+    # Subplots 1 a 14: Grad-CAM por patologia
+    for idx, label_name in enumerate(labels):
+        cam, prob = grad_cam.generate_heatmap(input_tensor, idx)
+        overlay = sobrepor_heatmap(imagem_np, cam)
         
-        original_img = Image.open(img_path)
-        input_tensor = val_tf(original_img.convert("RGB")).unsqueeze(0).to(DEVICE)
+        ax_idx = idx + 1
+        axes[ax_idx].imshow(overlay)
+        axes[ax_idx].set_title(f"{label_name}\nProb: {prob:.1%}", fontsize=9)
+        axes[ax_idx].axis("off")
         
-        class_idx = LABELS.index(patologia)
-        cam, prob = grad_cam.generate_heatmap(input_tensor, class_idx)
-        
-        overlay = gerar_overlay_gradcam(original_img, cam)
-        
-        # Plota Raio-X Original
-        axes[idx, 0].imshow(original_img, cmap='gray')
-        axes[idx, 0].set_title(f"Original: {img_name}\nDoença Real: {patologia}", fontsize=10)
-        axes[idx, 0].axis('off')
-        
-        # Plota Grad-CAM
-        axes[idx, 1].imshow(overlay)
-        axes[idx, 1].set_title(f"Grad-CAM ({patologia})\nProbabilidade Predita: {prob*100:.1f}%", fontsize=10, fontweight='bold')
-        axes[idx, 1].axis('off')
-
-    plt.suptitle("Explicabilidade Visual com Grad-CAM (ResNet-50)", fontsize=14, fontweight='bold', y=1.01)
     plt.tight_layout()
-    
-    output_path = "results/gradcam_exemplos.png"
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close()
+
+def main():
+    print("Iniciando geracao de mapas de calor individuais por patologia...")
     
-    print(f"✅ Painel do Grad-CAM salvo com sucesso em: {output_path}")
+    # Carrega o modelo com os melhores pesos treinados
+    model = get_resnet50_model(num_classes=NUM_CLASSES, pretrained=False).to(DEVICE)
+    checkpoint_path = "checkpoints/best_resnet50.pth"
+    
+    if not os.path.exists(checkpoint_path):
+        print(f"Erro: Checkpoint nao encontrado em {checkpoint_path}")
+        return
+        
+    model.load_state_dict(torch.load(checkpoint_path, map_location=DEVICE))
+    model.eval()
+    
+    # Exemplo: Seleciona as primeiras imagens do conjunto de teste
+    test_df_path = "data/processed/test.csv"
+    if os.path.exists(test_df_path):
+        import pandas as pd
+        test_df = pd.read_csv(test_df_path)
+        
+        # Processa as 3 primeiras imagens de teste como amostra
+        for i in range(min(3, len(test_df))):
+            img_name = test_df.iloc[i]["Image Index"]
+            img_path = os.path.join(IMAGES_DIR, img_name)
+            output_file = f"results/gradcam/pathologies_{img_name}"
+            
+            if os.path.exists(img_path):
+                gerar_gradcam_todas_patologias(model, img_path, LABELS, output_file)
+                print(f"Mapa de calor salvo em: {output_file}")
+            else:
+                print(f"Imagem nao encontrada: {img_path}")
 
 if __name__ == "__main__":
     main()

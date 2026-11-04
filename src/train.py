@@ -9,12 +9,11 @@ import numpy as np
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
-from src.config import DEVICE, IMAGES_DIR, LABELS, NUM_CLASSES
+from src.config import DEVICE, IMAGES_DIR, LABELS, NUM_CLASSES, MODEL_NAME, CHECKPOINT_DIR, RESULTS_DIR
 from src.dataset import NIHChestXrayDataset, get_transforms
-from src.models.resnet import get_resnet50_model
+from src.models import build_model
 
 def calcular_auroc(y_true, y_pred, labels):
-    """Calcula a AUROC para cada uma das 14 doenças e retorna a média."""
     auroc_por_classe = {}
     for i, label in enumerate(labels):
         try:
@@ -30,10 +29,9 @@ def treinar_uma_epoca(model, dataloader, criterion, optimizer, scaler, device, e
     model.train()
     total_loss = 0.0
     
-    #  Barra de Progresso com TQDM no Treino
     pbar = tqdm(
         dataloader, 
-        desc=f"Época [{epoch}/{total_epochs}] - Treinando", 
+        desc=f"Epoca [{epoch}/{total_epochs}] - Treinando ({MODEL_NAME})", 
         leave=False, 
         dynamic_ncols=True
     )
@@ -52,8 +50,6 @@ def treinar_uma_epoca(model, dataloader, criterion, optimizer, scaler, device, e
         scaler.update()
         
         total_loss += loss.item() * images.size(0)
-        
-        # Atualiza o valor da Loss em tempo real na barra de progresso
         pbar.set_postfix(batch_loss=f"{loss.item():.4f}")
         
     return total_loss / len(dataloader.dataset)
@@ -65,7 +61,6 @@ def avaliar(model, dataloader, criterion, device, desc="Avaliando"):
     all_targets = []
     all_preds = []
     
-    #  Barra de Progresso com TQDM na Validação/Teste
     pbar = tqdm(
         dataloader, 
         desc=desc, 
@@ -96,13 +91,12 @@ def avaliar(model, dataloader, criterion, device, desc="Avaliando"):
 
 def main():
     print(f"Utilizando dispositivo: {DEVICE}")
+    print(f"Modelo selecionado: {MODEL_NAME}")
     
-    # 1. Carrega os conjuntos pré-processados
     train_df = pd.read_csv("data/processed/train.csv")
     val_df = pd.read_csv("data/processed/val.csv")
     test_df = pd.read_csv("data/processed/test.csv")
     
-    # 2. Prepara os DataLoaders Otimizados
     train_tf, val_tf = get_transforms()
     
     train_dataset = NIHChestXrayDataset(train_df, IMAGES_DIR, transform=train_tf, labels=LABELS)
@@ -111,7 +105,7 @@ def main():
     
     train_loader = DataLoader(
         train_dataset, 
-        batch_size=128, 
+        batch_size=64, 
         shuffle=True, 
         num_workers=4, 
         pin_memory=True
@@ -131,35 +125,36 @@ def main():
         pin_memory=True
     )
     
-    # 3. Instancia Modelo
-    print("Carregando arquitetura e pesos da ResNet-50...")
-    model = get_resnet50_model(num_classes=NUM_CLASSES, pretrained=True).to(DEVICE)
-    print(" -> Modelo carregado na GPU com sucesso!")
+    print(f"Carregando arquitetura e pesos do {MODEL_NAME}...")
+    model = build_model(model_name=MODEL_NAME, num_classes=NUM_CLASSES, pretrained=True).to(DEVICE)
+    print("Modelo carregado na GPU com sucesso.")
     
     criterion = nn.BCEWithLogitsLoss()
-    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
+    
+    # Para ViT, recomenda-se uma taxa de aprendizado ligeiramente menor (ex: 3e-5 a 1e-4) com AdamW
+    optimizer = torch.optim.AdamW(model.parameters(), lr=3e-5, weight_decay=1e-2)
     scaler = torch.amp.GradScaler('cuda')
 
-    # 4. Loop de Treinamento
     epochs = 10
     best_val_auroc = 0.0
-    os.makedirs("checkpoints", exist_ok=True)
-    os.makedirs("results", exist_ok=True)
+    os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+    os.makedirs(RESULTS_DIR, exist_ok=True)
 
+    checkpoint_file = os.path.join(CHECKPOINT_DIR, f"best_{MODEL_NAME}.pth")
     historico_epocas = []
     start_train_time = time.time()
 
-    print(f"\n Iniciando o treinamento ({epochs} Épocas)...")
+    print(f"Iniciando o treinamento ({epochs} Epocas)...")
 
     for epoch in range(1, epochs + 1):
         epoch_start = time.time()
         
         train_loss = treinar_uma_epoca(model, train_loader, criterion, optimizer, scaler, DEVICE, epoch, epochs)
-        val_loss, val_auroc, _ = avaliar(model, val_loader, criterion, DEVICE, desc=f"Época [{epoch}/{epochs}] - Validando")
+        val_loss, val_auroc, _ = avaliar(model, val_loader, criterion, DEVICE, desc=f"Epoca [{epoch}/{epochs}] - Validando")
         
         epoch_duration = time.time() - epoch_start
         
-        print(f"Época [{epoch}/{epochs}] | Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f} | Val Mean AUROC: {val_auroc:.4f} | Tempo: {epoch_duration:.1f}s")
+        print(f"Epoca [{epoch}/{epochs}] | Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f} | Val Mean AUROC: {val_auroc:.4f} | Tempo: {epoch_duration:.1f}s")
         
         dados_epoca = {
             "epoch": epoch,
@@ -172,22 +167,21 @@ def main():
         
         if val_auroc > best_val_auroc:
             best_val_auroc = val_auroc
-            torch.save(model.state_dict(), "checkpoints/best_resnet50.pth")
-            print("  ↳ Melhor modelo salvo!")
+            torch.save(model.state_dict(), checkpoint_file)
+            print("Melhor modelo salvo!")
 
         df_hist = pd.DataFrame(historico_epocas)
-        df_hist.to_csv("results/history.csv", index=False)
-        with open("results/history.json", "w") as f:
+        df_hist.to_csv(os.path.join(RESULTS_DIR, "history.csv"), index=False)
+        with open(os.path.join(RESULTS_DIR, "history.json"), "w") as f:
             json.dump(historico_epocas, f, indent=4)
             
     train_duration = time.time() - start_train_time
     train_min, train_sec = divmod(train_duration, 60)
     train_time_str = f"{int(train_min)}m {train_sec:.2f}s"
-    print(f"\nTempo total de Treinamento: {train_time_str}")
+    print(f"Tempo total de Treinamento: {train_time_str}")
 
-    # 5. Avaliação Final no Conjunto de Teste
-    print("\n--- AVALIAÇÃO FINAL NO TESTE (Melhor Checkpoint) ---")
-    model.load_state_dict(torch.load("checkpoints/best_resnet50.pth", map_location=DEVICE))
+    print("--- AVALIACAO FINAL NO TESTE (Melhor Checkpoint) ---")
+    model.load_state_dict(torch.load(checkpoint_file, map_location=DEVICE))
 
     start_test_time = time.time()
     test_loss, test_auroc, class_auroc = avaliar(model, test_loader, criterion, DEVICE, desc="Avaliando no Teste")
@@ -196,9 +190,10 @@ def main():
     test_time_str = f"{int(test_min)}m {test_sec:.2f}s"
 
     print(f"Test Loss: {test_loss:.4f} | Test Mean AUROC: {test_auroc:.4f}")
-    print(f"Tempo total de Teste (Inferência): {test_time_str}\n")
+    print(f"Tempo total de Teste (Inferencia): {test_time_str}")
 
     resultados = {
+        "model_name": MODEL_NAME,
         "execution_time": {
             "train_time_seconds": round(train_duration, 2),
             "train_time_formatted": train_time_str,
@@ -212,11 +207,11 @@ def main():
         "epochs_history": historico_epocas
     }
 
-    with open("results/metrics.json", "w") as f:
+    with open(os.path.join(RESULTS_DIR, "metrics.json"), "w") as f:
         json.dump(resultados, f, indent=4)
 
-    print("Histórico salvo em: results/history.csv e results/history.json")
-    print("Métricas do teste final salvas em: results/metrics.json")
+    print(f"Historico salvo em: {RESULTS_DIR}/history.csv e {RESULTS_DIR}/history.json")
+    print(f"Metricas do teste final salvas em: {RESULTS_DIR}/metrics.json")
 
 if __name__ == "__main__":
     main()
