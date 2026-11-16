@@ -1,100 +1,38 @@
 {
-    "model_name": "vit_b_16",
-    "execution_time": {
-        "train_time_seconds": 13069.12,
-        "train_time_formatted": "217m 49.12s",
-        "test_time_seconds": 256.62,
-        "test_time_formatted": "4m 16.62s"
-    },
-    "best_val_mean_auroc": 0.8230993886989293,
-    "test_loss": 0.15272900900081893,
-    "test_mean_auroc": 0.8220311200552163,
-    "auroc_per_class": {
-        "Atelectasis": 0.795453878483152,
-        "Cardiomegaly": 0.9062889861932515,
-        "Effusion": 0.8729645957849013,
-        "Infiltration": 0.7061520734165493,
-        "Mass": 0.8163042417516727,
-        "Nodule": 0.7182248106916818,
-        "Pneumonia": 0.7436044372294374,
-        "Pneumothorax": 0.858126392890521,
-        "Consolidation": 0.8075155022667421,
-        "Edema": 0.8904533975569217,
-        "Emphysema": 0.89670303776698,
-        "Fibrosis": 0.7991674308363774,
-        "Pleural_Thickening": 0.7849116219979213,
-        "Hernia": 0.9125652739069197
-    },
-    "epochs_history": [
-        {
-            "epoch": 1,
-            "train_loss": 0.1642,
-            "val_loss": 0.1509,
-            "val_mean_auroc": 0.7912,
-            "epoch_time_seconds": 1566.05
+    "teste01": {
+        "timestamp": "2026-11-12 21:53:26",
+        "model_name": "vit_b_16",
+        "checkpoint_file": "checkpoints\\vit_b_16\\best_vit_b_16_teste01.pth",
+        "hyperparameters": {
+            "epochs": 10,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "weight_decay": 0.01
         },
-        {
-            "epoch": 2,
-            "train_loss": 0.1514,
-            "val_loss": 0.1498,
-            "val_mean_auroc": 0.8098,
-            "epoch_time_seconds": 1149.72
+        "execution_time": {
+            "train_time_seconds": 14326.18,
+            "train_time_formatted": "238m 46.18s",
+            "test_time_seconds": 257.31,
+            "test_time_formatted": "4m 17.31s"
         },
-        {
-            "epoch": 3,
-            "train_loss": 0.1469,
-            "val_loss": 0.1483,
-            "val_mean_auroc": 0.8204,
-            "epoch_time_seconds": 1210.64
-        },
-        {
-            "epoch": 4,
-            "train_loss": 0.1432,
-            "val_loss": 0.1476,
-            "val_mean_auroc": 0.8215,
-            "epoch_time_seconds": 1309.56
-        },
-        {
-            "epoch": 5,
-            "train_loss": 0.1392,
-            "val_loss": 0.1486,
-            "val_mean_auroc": 0.8205,
-            "epoch_time_seconds": 1321.94
-        },
-        {
-            "epoch": 6,
-            "train_loss": 0.1347,
-            "val_loss": 0.1484,
-            "val_mean_auroc": 0.8231,
-            "epoch_time_seconds": 1196.35
-        },
-        {
-            "epoch": 7,
-            "train_loss": 0.1296,
-            "val_loss": 0.1517,
-            "val_mean_auroc": 0.8164,
-            "epoch_time_seconds": 1260.95
-        },
-        {
-            "epoch": 8,
-            "train_loss": 0.1232,
-            "val_loss": 0.1541,
-            "val_mean_auroc": 0.8177,
-            "epoch_time_seconds": 1534.8
-        },
-        {
-            "epoch": 9,
-            "train_loss": 0.1153,
-            "val_loss": 0.1593,
-            "val_mean_auroc": 0.8086,
-            "epoch_time_seconds": 1256.39
-        },
-        {
-            "epoch": 10,
-            "train_loss": 0.1065,
-            "val_loss": 0.1663,
-            "val_mean_auroc": 0.7998,
-            "epoch_time_seconds": 1259.42
+        "best_val_mean_auroc": 0.8246458677880105,
+        "test_loss": 0.15212839903067482,
+        "test_mean_auroc": 0.819198649576465,
+        "auroc_per_class": {
+            "Atelectasis": 0.7960357943624887,
+            "Cardiomegaly": 0.9080402855588421,
+            "Effusion": 0.8754098140444808,
+            "Infiltration": 0.705941237138749,
+            "Mass": 0.8167219054733986,
+            "Nodule": 0.7201278388812221,
+            "Pneumonia": 0.7327360080395794,
+            "Pneumothorax": 0.8624001358557901,
+            "Consolidation": 0.8047578056729323,
+            "Edema": 0.8856485795775444,
+            "Emphysema": 0.8928761154339164,
+            "Fibrosis": 0.788752925141434,
+            "Pleural_Thickening": 0.7755610907073882,
+            "Hernia": 0.9037715581827445
         }
-    ]
+    }
 }

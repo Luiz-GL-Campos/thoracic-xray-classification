@@ -1,0 +1,74 @@
+{
+    "teste01": {
+        "timestamp": "2026-11-10 11:40:07",
+        "model_name": "resnet50",
+        "checkpoint_file": "checkpoints\\resnet50\\best_resnet50_teste01.pth",
+        "hyperparameters": {
+            "epochs": 10,
+            "batch_size": 128,
+            "learning_rate": 0.0001,
+            "weight_decay": 0.0001
+        },
+        "execution_time": {
+            "train_time_seconds": 12291.99,
+            "train_time_formatted": "204m 51.99s",
+            "test_time_seconds": 258.59,
+            "test_time_formatted": "4m 18.59s"
+        },
+        "best_val_mean_auroc": 0.8328951056843448,
+        "test_loss": 0.1519361667497453,
+        "test_mean_auroc": 0.8300366376993152,
+        "auroc_per_class": {
+            "Atelectasis": 0.8021167278929316,
+            "Cardiomegaly": 0.9098705650919008,
+            "Effusion": 0.8767487950549907,
+            "Infiltration": 0.7069091914060888,
+            "Mass": 0.8363646055586527,
+            "Nodule": 0.7552766533620444,
+            "Pneumonia": 0.7330460729746443,
+            "Pneumothorax": 0.882054063046672,
+            "Consolidation": 0.8142078808631322,
+            "Edema": 0.8900388387310194,
+            "Emphysema": 0.9105417261263328,
+            "Fibrosis": 0.8041870236466679,
+            "Pleural_Thickening": 0.7972559677387725,
+            "Hernia": 0.9018948162965627
+        }
+    },
+    "teste03": {
+        "timestamp": "2026-11-11 17:50:42",
+        "model_name": "resnet50",
+        "checkpoint_file": "checkpoints\\resnet50\\best_resnet50_teste03.pth",
+        "hyperparameters": {
+            "epochs": 10,
+            "batch_size": 128,
+            "learning_rate": 0.0001,
+            "weight_decay": 0.0001
+        },
+        "execution_time": {
+            "train_time_seconds": 12621.99,
+            "train_time_formatted": "210m 21.99s",
+            "test_time_seconds": 258.95,
+            "test_time_formatted": "4m 18.95s"
+        },
+        "best_val_mean_auroc": 0.82887395984819,
+        "test_loss": 0.1510003535904948,
+        "test_mean_auroc": 0.8278935435271997,
+        "auroc_per_class": {
+            "Atelectasis": 0.8052528591699961,
+            "Cardiomegaly": 0.9031169396185422,
+            "Effusion": 0.8770552410075538,
+            "Infiltration": 0.7024612011820995,
+            "Mass": 0.8318524751552393,
+            "Nodule": 0.750394286993195,
+            "Pneumonia": 0.7353083642547928,
+            "Pneumothorax": 0.8733878876360172,
+            "Consolidation": 0.8058168683718976,
+            "Edema": 0.8911896290200254,
+            "Emphysema": 0.9099085136723268,
+            "Fibrosis": 0.7965405661370094,
+            "Pleural_Thickening": 0.7938633001924579,
+            "Hernia": 0.9143614769696425
+        }
+    }
+}

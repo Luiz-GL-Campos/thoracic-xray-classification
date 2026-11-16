@@ -1,0 +1,213 @@
+{
+    "teste01": {
+        "timestamp": "2026-11-10 11:40:07",
+        "model_name": "resnet50",
+        "hyperparameters": {
+            "epochs": 10,
+            "batch_size": 128,
+            "learning_rate": 0.0001,
+            "weight_decay": 0.0001
+        },
+        "epochs": [
+            {
+                "epoch": 1,
+                "train_loss": 0.1711,
+                "val_loss": 0.1544,
+                "val_mean_auroc": 0.794,
+                "epoch_time_seconds": 1542.52
+            },
+            {
+                "epoch": 2,
+                "train_loss": 0.1496,
+                "val_loss": 0.1472,
+                "val_mean_auroc": 0.8195,
+                "epoch_time_seconds": 1092.78
+            },
+            {
+                "epoch": 3,
+                "train_loss": 0.1443,
+                "val_loss": 0.1469,
+                "val_mean_auroc": 0.8245,
+                "epoch_time_seconds": 1111.31
+            },
+            {
+                "epoch": 4,
+                "train_loss": 0.1402,
+                "val_loss": 0.1469,
+                "val_mean_auroc": 0.8308,
+                "epoch_time_seconds": 1215.9
+            },
+            {
+                "epoch": 5,
+                "train_loss": 0.1362,
+                "val_loss": 0.1477,
+                "val_mean_auroc": 0.8329,
+                "epoch_time_seconds": 1272.09
+            },
+            {
+                "epoch": 6,
+                "train_loss": 0.1318,
+                "val_loss": 0.1481,
+                "val_mean_auroc": 0.8275,
+                "epoch_time_seconds": 1168.39
+            },
+            {
+                "epoch": 7,
+                "train_loss": 0.1269,
+                "val_loss": 0.1516,
+                "val_mean_auroc": 0.8276,
+                "epoch_time_seconds": 1179.76
+            },
+            {
+                "epoch": 8,
+                "train_loss": 0.1214,
+                "val_loss": 0.1539,
+                "val_mean_auroc": 0.8229,
+                "epoch_time_seconds": 1290.93
+            },
+            {
+                "epoch": 9,
+                "train_loss": 0.1149,
+                "val_loss": 0.1562,
+                "val_mean_auroc": 0.8192,
+                "epoch_time_seconds": 1249.02
+            },
+            {
+                "epoch": 10,
+                "train_loss": 0.1076,
+                "val_loss": 0.164,
+                "val_mean_auroc": 0.8136,
+                "epoch_time_seconds": 1167.2
+            }
+        ]
+    },
+    "teste02": {
+        "timestamp": "2026-11-11 13:56:15",
+        "model_name": "resnet50",
+        "hyperparameters": {
+            "epochs": 10,
+            "batch_size": 128,
+            "learning_rate": 0.0001,
+            "weight_decay": 0.0001
+        },
+        "epochs": [
+            {
+                "epoch": 1,
+                "train_loss": 0.1736,
+                "val_loss": 0.1527,
+                "val_mean_auroc": 0.7916,
+                "epoch_time_seconds": 1562.89
+            },
+            {
+                "epoch": 2,
+                "train_loss": 0.1509,
+                "val_loss": 0.1495,
+                "val_mean_auroc": 0.8131,
+                "epoch_time_seconds": 1106.87
+            },
+            {
+                "epoch": 3,
+                "train_loss": 0.1454,
+                "val_loss": 0.1478,
+                "val_mean_auroc": 0.8153,
+                "epoch_time_seconds": 1148.81
+            },
+            {
+                "epoch": 4,
+                "train_loss": 0.1414,
+                "val_loss": 0.1489,
+                "val_mean_auroc": 0.8203,
+                "epoch_time_seconds": 1258.77
+            },
+            {
+                "epoch": 5,
+                "train_loss": 0.1375,
+                "val_loss": 0.1474,
+                "val_mean_auroc": 0.8215,
+                "epoch_time_seconds": 1300.02
+            }
+        ]
+    },
+    "teste03": {
+        "timestamp": "2026-11-11 17:50:42",
+        "model_name": "resnet50",
+        "hyperparameters": {
+            "epochs": 10,
+            "batch_size": 128,
+            "learning_rate": 0.0001,
+            "weight_decay": 0.0001
+        },
+        "epochs": [
+            {
+                "epoch": 1,
+                "train_loss": 0.1717,
+                "val_loss": 0.1531,
+                "val_mean_auroc": 0.7956,
+                "epoch_time_seconds": 1556.4
+            },
+            {
+                "epoch": 2,
+                "train_loss": 0.1499,
+                "val_loss": 0.1484,
+                "val_mean_auroc": 0.8169,
+                "epoch_time_seconds": 1158.46
+            },
+            {
+                "epoch": 3,
+                "train_loss": 0.1445,
+                "val_loss": 0.1471,
+                "val_mean_auroc": 0.8187,
+                "epoch_time_seconds": 1185.58
+            },
+            {
+                "epoch": 4,
+                "train_loss": 0.1404,
+                "val_loss": 0.1469,
+                "val_mean_auroc": 0.8272,
+                "epoch_time_seconds": 1332.19
+            },
+            {
+                "epoch": 5,
+                "train_loss": 0.1364,
+                "val_loss": 0.1477,
+                "val_mean_auroc": 0.8289,
+                "epoch_time_seconds": 1268.45
+            },
+            {
+                "epoch": 6,
+                "train_loss": 0.132,
+                "val_loss": 0.1481,
+                "val_mean_auroc": 0.8264,
+                "epoch_time_seconds": 1155.61
+            },
+            {
+                "epoch": 7,
+                "train_loss": 0.1271,
+                "val_loss": 0.1502,
+                "val_mean_auroc": 0.8282,
+                "epoch_time_seconds": 1280.65
+            },
+            {
+                "epoch": 8,
+                "train_loss": 0.1214,
+                "val_loss": 0.1544,
+                "val_mean_auroc": 0.8268,
+                "epoch_time_seconds": 1292.54
+            },
+            {
+                "epoch": 9,
+                "train_loss": 0.1146,
+                "val_loss": 0.1606,
+                "val_mean_auroc": 0.811,
+                "epoch_time_seconds": 1195.19
+            },
+            {
+                "epoch": 10,
+                "train_loss": 0.107,
+                "val_loss": 0.1655,
+                "val_mean_auroc": 0.8048,
+                "epoch_time_seconds": 1195.45
+            }
+        ]
+    }
+}
