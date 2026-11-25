@@ -80,5 +80,87 @@
                 "epoch_time_seconds": 1263.75
             }
         ]
+    },
+    "teste02": {
+        "timestamp": "2026-11-24 18:38:41",
+        "model_name": "vit_b_16",
+        "hyperparameters": {
+            "epochs": 10,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "weight_decay": 0.01
+        },
+        "epochs": [
+            {
+                "epoch": 1,
+                "train_loss": 0.1485,
+                "val_loss": 0.1406,
+                "val_mean_auroc": 0.7862,
+                "epoch_time_seconds": 1486.27
+            },
+            {
+                "epoch": 2,
+                "train_loss": 0.1366,
+                "val_loss": 0.136,
+                "val_mean_auroc": 0.8084,
+                "epoch_time_seconds": 1189.16
+            },
+            {
+                "epoch": 3,
+                "train_loss": 0.1323,
+                "val_loss": 0.1349,
+                "val_mean_auroc": 0.8155,
+                "epoch_time_seconds": 1131.28
+            },
+            {
+                "epoch": 4,
+                "train_loss": 0.1291,
+                "val_loss": 0.1348,
+                "val_mean_auroc": 0.8169,
+                "epoch_time_seconds": 1198.29
+            },
+            {
+                "epoch": 5,
+                "train_loss": 0.1256,
+                "val_loss": 0.1339,
+                "val_mean_auroc": 0.8217,
+                "epoch_time_seconds": 1232.0
+            },
+            {
+                "epoch": 6,
+                "train_loss": 0.1217,
+                "val_loss": 0.1353,
+                "val_mean_auroc": 0.8199,
+                "epoch_time_seconds": 1139.06
+            },
+            {
+                "epoch": 7,
+                "train_loss": 0.1169,
+                "val_loss": 0.1362,
+                "val_mean_auroc": 0.822,
+                "epoch_time_seconds": 1159.55
+            },
+            {
+                "epoch": 8,
+                "train_loss": 0.1111,
+                "val_loss": 0.1383,
+                "val_mean_auroc": 0.8132,
+                "epoch_time_seconds": 1284.73
+            },
+            {
+                "epoch": 9,
+                "train_loss": 0.104,
+                "val_loss": 0.1422,
+                "val_mean_auroc": 0.8099,
+                "epoch_time_seconds": 1242.12
+            },
+            {
+                "epoch": 10,
+                "train_loss": 0.096,
+                "val_loss": 0.1486,
+                "val_mean_auroc": 0.7933,
+                "epoch_time_seconds": 1191.15
+            }
+        ]
     }
 }

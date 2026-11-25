@@ -34,5 +34,41 @@
             "Pleural_Thickening": 0.7755610907073882,
             "Hernia": 0.9037715581827445
         }
+    },
+    "teste02": {
+        "timestamp": "2026-11-24 18:38:41",
+        "model_name": "vit_b_16",
+        "checkpoint_file": "checkpoints\\vit_b_16\\best_vit_b_16_teste02.pth",
+        "hyperparameters": {
+            "epochs": 10,
+            "batch_size": 64,
+            "learning_rate": 3e-05,
+            "weight_decay": 0.01
+        },
+        "execution_time": {
+            "train_time_seconds": 12257.71,
+            "train_time_formatted": "204m 17.71s",
+            "test_time_seconds": 288.83,
+            "test_time_formatted": "4m 48.83s"
+        },
+        "best_val_mean_auroc": 0.8219630006401889,
+        "test_loss": 0.21818220084159054,
+        "test_mean_auroc": 0.780573187734155,
+        "auroc_per_class": {
+            "Atelectasis": 0.7511981800183971,
+            "Cardiomegaly": 0.8706910995511218,
+            "Effusion": 0.8115003327618668,
+            "Infiltration": 0.6654613479673482,
+            "Mass": 0.7787593738221551,
+            "Nodule": 0.7121374274545206,
+            "Pneumonia": 0.6957379447256049,
+            "Pneumothorax": 0.8287247827175138,
+            "Consolidation": 0.7238949931439351,
+            "Edema": 0.8377235555039455,
+            "Emphysema": 0.8711145551608056,
+            "Fibrosis": 0.8129689854806312,
+            "Pleural_Thickening": 0.7589168415249365,
+            "Hernia": 0.8091952084453885
+        }
     }
 }
